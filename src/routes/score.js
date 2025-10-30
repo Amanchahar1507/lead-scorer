@@ -13,16 +13,25 @@ router.post("/", async (req, res) => {
   results = [];
 
   for (const lead of leads) {
-    const ruleScore = calculateRuleScore(lead);
-    const { intent, reasoning } = await getAiIntent(lead, globalThis.offer);
-    const aiScore = intent === "High" ? 50 : intent === "Medium" ? 30 : 10;
-    const total = ruleScore + aiScore;
-    const finalIntent = total >= 70 ? "High" : total >= 40 ? "Medium" : "Low";
+  const ruleScore = calculateRuleScore(lead);
+  const { intent, ai_points, reasoning } = await getAiIntent(lead, globalThis.offer);
 
-    const scored = { name: lead.name, role: lead.role, company: lead.company, intent: finalIntent, score: total, reasoning };
-    results.push(scored);
-    console.table(scored);
-  }
+  const total = ruleScore + ai_points; 
+  const finalIntent = total >= 70 ? "High" : total >= 40 ? "Medium" : "Low";
+
+  const scored = {
+    name: lead.name,
+    role: lead.role,
+    company: lead.company,
+    intent: finalIntent,
+    score: total,
+    ai_points,        
+    rule_points: ruleScore,  
+    reasoning,
+  };
+  results.push(scored);
+  console.table(scored);
+}
 
   res.json({ message: "Scoring complete", count: results.length });
 });

@@ -1,6 +1,6 @@
 # Lead Scorer API
 
-**Live URL**: https://lead-scorer.onrender.com
+**Live URL**:
 
 ## Setup
 ```bash
